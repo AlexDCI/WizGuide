@@ -1,34 +1,82 @@
-Проект Wizguide: Задание на 2-й день: Создание приложения и настройка REST API
-1. Создайте приложение translator:
-    * Внутри проекта translator_helper создайте приложение translator:bashКопировать кодpython manage.py startapp translator
-    * 
-2. Подключение приложения:
-    * Добавьте translator и rest_framework в список INSTALLED_APPS в settings.py.
-3. Настройка базового API:
-    * Создайте простейший API-эндпоинт для теста, используя Django REST Framework.
-    * В translator/views.py добавьте тестовый API-контроллер, например, который возвращает сообщение {"message": "API is working"}.
-4. Настройка маршрутов:
-    * В translator/urls.py добавьте URL-маршрут для тестового API.
-    * Подключите translator/urls.py к urls.py вашего основного проекта.
-5. Проверка работы API:
-    * Перезапустите сервер и проверьте, что по новому маршруту вы видите JSON-ответ.
+Отличная работа! Если у вас уже есть рабочий бэкенд, приложение и простой API, то следующим шагом будет улучшение функционала и подготовка к интеграции с внешними сервисами. Давайте продолжим развитие проекта. На ближайшие 2-3 дня предлагаю следующие задачи:
 
-Задание на 3-й день: Разработка модели для хранения переведенного текста
-1. Создайте базовую модель для перевода:
-    * В translator/models.py создайте модель Translation, которая будет хранить текст, язык исходного текста и переведенный текст.
-2. Настройка миграций:
-    * Выполните миграции, чтобы создать таблицы в базе данных:bashКопировать кодpython manage.py makemigrations
-    * python manage.py migrate
-    * 
-3. Создание сериализатора:
-    * В translator/serializers.py создайте сериализатор TranslationSerializer, который будет преобразовывать данные модели Translation в JSON-формат для API.
-4. Добавьте эндпоинт для сохранения переводов:
-    * В translator/views.py добавьте контроллер, чтобы принимать и сохранять переводы через POST-запросы.
+Задание на следующие 2-3 дня:
+1. Интеграция с ChatGPT API для перевода и комментариев
+Изучите документацию OpenAI API: Убедитесь, что вы знаете, как работать с библиотекой openai для выполнения запросов к модели GPT.
 
-Проверка выполнения задания
-По завершении этих 3 дней у вас должно быть:
-* Рабочее виртуальное окружение и установленный Django.
-* Базовый Django проект translator_helper и приложение translator.
-* Настроенный API с простым эндпоинтом.
-* Базовая модель для хранения переводов, сериализатор и эндпоинт для сохранения переводов.
+Установите openai:
 
+bash
+Копировать код
+pip install openai
+Добавьте ключ API OpenAI в .env:
+
+env
+Копировать код
+OPENAI_API_KEY=your_openai_api_key_here
+Настройте settings.py для чтения ключа:
+
+python
+Копировать код
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+Создайте представление (view) для обработки запросов перевода: В файле translator/views.py добавьте функцию или класс, который будет принимать текст и язык, отправлять запрос к OpenAI API и возвращать результат.
+
+python
+Копировать код
+import openai
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+@csrf_exempt
+def translate_text(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        input_text = data.get("text")
+        target_language = data.get("language")
+
+        response = openai.Completion.create(
+            engine="text-davinci-003",  # выберите модель по необходимости
+            prompt=f"Translate the following text to {target_language}: {input_text}",
+            max_tokens=1000
+        )
+        translation = response.choices[0].text.strip()
+
+        return JsonResponse({"translation": translation})
+Настройте URL для нового эндпоинта:
+python
+Копировать код
+from django.urls import path
+from .views import translate_text
+
+urlpatterns = [
+    path('translate/', translate_text, name='translate-text'),
+]
+2. Тестирование API и отладка
+Напишите простые тесты для проверки работы нового эндпоинта.
+Проверьте корректность запросов и ответов, обработку ошибок и поведение при отсутствии параметров.
+3. Улучшение модели для сохранения данных переводов
+Добавьте дополнительные поля в модель Translation, такие как:
+Исходный язык.
+Дата и время создания записи.
+Обновите сериализатор и миграции.
+python
+Копировать код
+from django.db import models
+
+class Translation(models.Model):
+    input_text = models.TextField()
+    translated_text = models.TextField()
+    source_language = models.CharField(max_length=50)
+    target_language = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+4. Документация и README
+Обновите README.md, добавив описание нового функционала и инструкции по настройке API OpenAI.
+Опишите, как использовать эндпоинты и какой формат запроса требуется.
+Следующие шаги после выполнения этого задания:
+Интеграция с фронтендом (мобильное приложение или веб-интерфейс).
+Добавление аутентификации и авторизации для пользователей.
+Оптимизация производительности и добавление логирования.
+Отправляйте изменения на GitHub после завершения каждого шага, чтобы сохранить историю работы и облегчить тестирование и ревью!

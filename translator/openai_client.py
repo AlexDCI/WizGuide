@@ -6,16 +6,6 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
-# def get_response_from_openai(user_message):
-#     # Используем новый API
-#     response = openai.ChatCompletion.create(
-#         model="gpt-4",  # Используйте модель GPT-4 или GPT-3.5
-#         messages=[{"role": "user", "content": user_message}],
-#         max_tokens=150
-#     )
-#     print(response)
-#     return response['choices'][0]['message']['content']
-
 
 def get_response_from_openai(user_message, target_language):
     try:

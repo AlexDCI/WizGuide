@@ -1,82 +1,14 @@
-Отличная работа! Если у вас уже есть рабочий бэкенд, приложение и простой API, то следующим шагом будет улучшение функционала и подготовка к интеграции с внешними сервисами. Давайте продолжим развитие проекта. На ближайшие 2-3 дня предлагаю следующие задачи:
+Следующее задание
+Интеграция авторизации пользователя:
 
-Задание на следующие 2-3 дня:
-1. Интеграция с ChatGPT API для перевода и комментариев
-Изучите документацию OpenAI API: Убедитесь, что вы знаете, как работать с библиотекой openai для выполнения запросов к модели GPT.
+Добавьте простую систему пользователей с регистрацией и авторизацией (можно использовать django.contrib.auth).
+Реализуйте функционал, чтобы каждый пользователь видел историю своих переводов.
+Обновление моделей:
 
-Установите openai:
+Добавьте связь между пользователем и переводами (например, поле user = models.ForeignKey(User, on_delete=models.CASCADE)).
+Интерфейс:
 
-bash
-Копировать код
-pip install openai
-Добавьте ключ API OpenAI в .env:
+Разработайте простую веб-страницу на Django с формой для ввода текста и выбора языка, которая будет обращаться к вашему API.
+Тестирование:
 
-env
-Копировать код
-OPENAI_API_KEY=your_openai_api_key_here
-Настройте settings.py для чтения ключа:
-
-python
-Копировать код
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-Создайте представление (view) для обработки запросов перевода: В файле translator/views.py добавьте функцию или класс, который будет принимать текст и язык, отправлять запрос к OpenAI API и возвращать результат.
-
-python
-Копировать код
-import openai
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
-
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
-@csrf_exempt
-def translate_text(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        input_text = data.get("text")
-        target_language = data.get("language")
-
-        response = openai.Completion.create(
-            engine="text-davinci-003",  # выберите модель по необходимости
-            prompt=f"Translate the following text to {target_language}: {input_text}",
-            max_tokens=1000
-        )
-        translation = response.choices[0].text.strip()
-
-        return JsonResponse({"translation": translation})
-Настройте URL для нового эндпоинта:
-python
-Копировать код
-from django.urls import path
-from .views import translate_text
-
-urlpatterns = [
-    path('translate/', translate_text, name='translate-text'),
-]
-2. Тестирование API и отладка
-Напишите простые тесты для проверки работы нового эндпоинта.
-Проверьте корректность запросов и ответов, обработку ошибок и поведение при отсутствии параметров.
-3. Улучшение модели для сохранения данных переводов
-Добавьте дополнительные поля в модель Translation, такие как:
-Исходный язык.
-Дата и время создания записи.
-Обновите сериализатор и миграции.
-python
-Копировать код
-from django.db import models
-
-class Translation(models.Model):
-    input_text = models.TextField()
-    translated_text = models.TextField()
-    source_language = models.CharField(max_length=50)
-    target_language = models.CharField(max_length=50)
-    created_at = models.DateTimeField(auto_now_add=True)
-4. Документация и README
-Обновите README.md, добавив описание нового функционала и инструкции по настройке API OpenAI.
-Опишите, как использовать эндпоинты и какой формат запроса требуется.
-Следующие шаги после выполнения этого задания:
-Интеграция с фронтендом (мобильное приложение или веб-интерфейс).
-Добавление аутентификации и авторизации для пользователей.
-Оптимизация производительности и добавление логирования.
-Отправляйте изменения на GitHub после завершения каждого шага, чтобы сохранить историю работы и облегчить тестирование и ревью!
+Протестируйте сохранение и отображение данных в базе, включая авторизацию и ограничение доступа к переводам только для их владельца.

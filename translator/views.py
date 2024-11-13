@@ -1,9 +1,5 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Translation
-from .serializers import TranslationSerializer
 import openai
 import os
 from dotenv import load_dotenv
@@ -12,6 +8,9 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from .translate import extract_and_validate_data, translate_text_via_openai, save_translation_to_db  # Подключаем наши функции
 from .openai_client import get_response_from_openai
+from rest_framework import generics
+from .models import Translation
+from .serializers import TranslationSerializer
 
 
 load_dotenv()
@@ -45,7 +44,15 @@ def translate_text(request):
         })
 
 
+class TranslationListView(generics.ListCreateAPIView):
+    queryset = Translation.objects.all()
+    serializer_class = TranslationSerializer
 
+class TranslationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Translation.objects.all()
+    serializer_class = TranslationSerializer
+
+    
 
 
 @csrf_exempt

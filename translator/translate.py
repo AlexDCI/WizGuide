@@ -42,3 +42,12 @@ def save_translation_to_db(input_text, translated_text, target_language):
         target_language=target_language
     )
     translation.save()
+
+
+'''
+    {
+    "original_text": "Global warming is one of the most significant challenges facing humanity today.",
+    "target_language": "Russian",
+    "user": 1  
+}
+'''

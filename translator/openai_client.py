@@ -11,7 +11,7 @@ def get_response_from_openai(user_message, target_language):
     try:
         # Используем API v1/chat/completions с моделью gpt-3.5-turbo
         response = openai.ChatCompletion.create(
-            model="gpt-4",  # Убедитесь, что выбрали правильную модель
+            model="gpt-3.5-turbo",  # Убедитесь, что выбрали правильную модель
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": f"Translate the following text to {target_language}: {user_message}"}

@@ -1,3 +1,5 @@
+# translator/models.py
+
 from django.db import models
 from users.models import CustomUser  # импортируем модель CustomUser
 
@@ -13,3 +15,5 @@ class Translation(models.Model):
 
     def __str__(self):
         return f"{self.source_language} to {self.target_language}: {self.original_text[:30]}..."
+    
+   

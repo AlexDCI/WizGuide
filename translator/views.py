@@ -1,3 +1,4 @@
+# translator/views.py
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 import openai
@@ -11,15 +12,24 @@ from .openai_client import get_response_from_openai
 from rest_framework import generics
 from .models import Translation
 from .serializers import TranslationSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
+
+from rest_framework.decorators import permission_classes
+
 @csrf_exempt
+@permission_classes([IsAuthenticated])  # Добавляем проверку на аутентификацию
 def translate_text(request):
     if request.method == 'POST':
+        # Проверка на аутентификацию пользователя (по сути, это уже делается через permission_classes)
+        if not request.user.is_authenticated:
+            return JsonResponse({"error": "Authentication required"}, status=401)
+        
         # Извлечение и валидация данных
         data, error_response = extract_and_validate_data(request)
         if error_response:
@@ -32,8 +42,11 @@ def translate_text(request):
         if error_response:
             return error_response
 
-        # Сохранение в базу данных
-        save_translation_to_db(input_text, translated_text, target_language)
+        # Получаем пользователя из запроса
+        user = request.user
+
+        # Сохраняем перевод в базу данных, привязывая его к пользователю
+        save_translation_to_db(input_text, translated_text, target_language, user)
 
         # Ответ с результатом
         return JsonResponse({

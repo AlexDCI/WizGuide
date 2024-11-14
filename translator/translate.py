@@ -1,4 +1,4 @@
-# translate.py (или в другом соответствующем файле)
+# translate.py 
 import openai
 from .models import Translation
 from .openai_client import get_response_from_openai
@@ -34,14 +34,16 @@ def translate_text_via_openai(input_text, target_language):
 
 
 
-def save_translation_to_db(input_text, translated_text, target_language):
+def save_translation_to_db(input_text, translated_text, target_language, user):
     translation = Translation(
         original_text=input_text,
         source_language="English",  # Это можно сделать динамическим при необходимости
         translated_text=translated_text,
-        target_language=target_language
+        target_language=target_language,
+        user=user  # Привязываем пользователя
     )
     translation.save()
+
 
 
 '''

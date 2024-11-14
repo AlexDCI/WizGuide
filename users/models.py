@@ -1,3 +1,4 @@
+# users.models.py
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -9,6 +10,9 @@ class CustomUser(AbstractUser):
     ]
     role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='user')
     trial_expiry_date = models.DateField(null=True, blank=True)
+
+    # Добавляем поле is_active
+    is_active = models.BooleanField(default=True)
 
     # Добавление related_name для поля groups и user_permissions
     groups = models.ManyToManyField(

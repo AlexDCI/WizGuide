@@ -26,3 +26,11 @@
 
 #     def __str__(self):
 #         return f"{self.source_language} to {self.target_language}: {self.original_text[:30]}..."
+
+
+'''
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMTY4OTkzMCwiaWF0IjoxNzMxNjAzNTMwLCJqdGkiOiI3YWIzNWQ0NWIxMDE0ZDM5OWZkM2UyOTMxNTMyMzlhMCIsInVzZXJfaWQiOjJ9.8SqTigG5YHL0DL8eW0y0C2fKrT6LHqjNOvILjJLgyuo",
+    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNjAzODMwLCJpYXQiOjE3MzE2MDM1MzAsImp0aSI6ImUwNTU3YjI0MjE1YTQzMzU5MjM2ZmEwMjg1MWQ1ZDI0IiwidXNlcl9pZCI6Mn0.kOE5C0U2f-FW8eCZgPLc1dIb04xM2rGcm1WlbkoZqJg"
+}
+'''
